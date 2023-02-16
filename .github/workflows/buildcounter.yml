@@ -49,6 +49,7 @@ jobs:
           git commit -m "Increment build counter [skip ci]"
           git push
  
-      - name: Print build version
+      - name: Print Build counter and Build number
         run: |
           echo "Build Counter: ${{ steps.increment-counter.outputs.new_version }}"
+          echo "Build Version: ${{ steps.increment-counter.outputs.newBuildCounter }}"
