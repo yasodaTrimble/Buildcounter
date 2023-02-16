@@ -42,7 +42,7 @@ jobs:
           $filePath = "${{ env.BUILD_COUNTER_FILE }}"
           Set-Content -Path $filePath -Value $newBuildCounter
           Write-Host "::set-output name=new_version::$newVersion"
-          cd build-counter
+       
           git config user.name "yasodatrimble"
           git config user.email "yashoda_rania@trimble.com"
           git add $filePath
