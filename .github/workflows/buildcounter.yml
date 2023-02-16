@@ -1,0 +1,54 @@
+name: uildcounter
+ 
+on: push
+ 
+env:
+  BUILD_COUNTER_REPO: yasodaTrimble/Buildcounter
+  BUILD_COUNTER_BRANCH: Init
+  BUILD_COUNTER_FILE: counter.txt
+ 
+jobs:
+  my_job:
+    runs-on: windows-latest
+    steps:
+ 
+      - name: Clone build counter repo
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ env.BUILD_COUNTER_REPO }}
+          ref: ${{ env.BUILD_COUNTER_BRANCH }}
+          path: build-counter
+ 
+      - name: Checkout code
+        uses: actions/checkout@v2
+ 
+      - name: Read build counter
+        id: read-counter
+        run: |
+          $filePath = "${{ env.BUILD_COUNTER_FILE }}"
+          $version = "2022.4.3"
+          if (Test-Path $filePath) {
+            $lastBuildCounter = Get-Content $filePath
+          } else {
+            $lastBuildCounter = 0
+          }
+          Write-Host "::set-output name=last_build_counter::$lastBuildCounter"
+ 
+      - name: Increment build counter
+        id: increment-counter
+        run: |
+          $newBuildCounter = ${{ steps.read-counter.outputs.last_build_counter }} + 1
+          $newVersion = "$version.$newBuildCounter"
+          $filePath = "${{ env.BUILD_COUNTER_FILE }}"
+          Set-Content -Path $filePath -Value $newBuildCounter
+          Write-Host "::set-output name=new_version::$newVersion"
+          cd build-counter
+          git config user.name "yasodatrimble"
+          git config user.email "yashoda_rania@trimble.com"
+          git add $filePath
+          git commit -m "Increment build counter [skip ci]"
+          git push
+ 
+      - name: Print build version
+        run: |
+          echo "Build Counter: ${{ steps.increment-counter.outputs.new_version }}"
