@@ -1,0 +1,38 @@
+
+name: Generate Build Number
+
+on:
+  push:
+    branches:
+      - yasoda-POC
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Load last build number
+        id: load_build_number
+        run: echo "::set-output name=build_number::$(cat>build_number.txt)"
+
+      - name: Generate new build number
+        id: generate_build_number
+        run: |
+          # Load the last build number
+          last_build_number=$(echo "${{ steps.load_build_number.outputs.build_number }}")
+          # Split the last build number into its components
+          IFS='.' read -ra build_parts <<< "${last_build_number}"
+          $ {year}=2022
+          $ {month}=4
+          $ {day}=3
+          $ {number}=0
+          # Increment the build number by 1
+          number=$((number+1))
+          # Generate the new build number
+          new_build_number="${year}.${month}.${day}.${number}"
+          # Save the new build number to a file
+          echo "${new_build_number}" > build_number.txt
+          # Set the new build number as an output
+          echo "::set-output name=build_number::${new_build_number}"
