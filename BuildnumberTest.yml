@@ -4,7 +4,7 @@ name: Generate Build Number
 on:
   push:
     branches:
-      - yasoda-POC
+      - main
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
 
       - name: Load last build number
         id: load_build_number
-        run: echo "::set-output name=build_number::$(cat>build_number.txt)"
+        run: echo "::set-output name=build_number::$(cat build_number.txt)"
 
       - name: Generate new build number
         id: generate_build_number
