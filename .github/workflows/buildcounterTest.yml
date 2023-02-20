@@ -4,7 +4,7 @@ name: Generate Build Number
 on:
   push:
     branches:
-      - yasoda-POC
+      - main
 
 jobs:
   build:
